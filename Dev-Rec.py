@@ -73,6 +73,8 @@ def main():
         k = cv2.waitKey(10)
         if k == 27:
             break
+    cap.release()
+    cv2.destroyAllWindows()
 
 def keras_predict(model, image):
     processed = keras_process_image(image)
@@ -93,5 +95,4 @@ def keras_process_image(img):
 
 keras_predict(model1, np.zeros((32, 32, 1), dtype=np.uint8))
 main()
-cap.release()
-cv2.destroyAllWindows()
+
