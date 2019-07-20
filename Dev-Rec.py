@@ -36,7 +36,7 @@ def main():
         if len(cnts) >= 1:
             contour = max(cnts, key=cv2.contourArea)
             if cv2.contourArea(contour) > 250:
-                print("aaya52")
+              
                 ((x, y), radius) = cv2.minEnclosingCircle(contour)
                 cv2.circle(img, (int(x), int(y)), int(radius), (0, 255, 255), 2)
                 cv2.circle(img, center, 5, (0, 0, 255), -1)
