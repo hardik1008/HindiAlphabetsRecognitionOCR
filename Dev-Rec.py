@@ -31,11 +31,12 @@ def main():
         blur = cv2.medianBlur(mask, 15)
         blur = cv2.GaussianBlur(blur, (5, 5), 0)
         thresh = cv2.threshold(blur, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)[1]
-        cnts = cv2.findContours(thresh.copy(), cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)[-2:]
+        cnt, _ = cv2.findContours(thresh.copy(), cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)[-2:]
         center = None
         if len(cnts) >= 1:
             contour = max(cnts, key=cv2.contourArea)
             if cv2.contourArea(contour) > 250:
+                print("aaya52")
                 ((x, y), radius) = cv2.minEnclosingCircle(contour)
                 cv2.circle(img, (int(x), int(y)), int(radius), (0, 255, 255), 2)
                 cv2.circle(img, center, 5, (0, 0, 255), -1)
@@ -49,6 +50,7 @@ def main():
                     cv2.line(img, pts[i - 1], pts[i], (0, 0, 255), 5)
         elif len(cnts) == 0:
             if len(pts) != []:
+                
                 blackboard_gray = cv2.cvtColor(blackboard, cv2.COLOR_BGR2GRAY)
                 blur1 = cv2.medianBlur(blackboard_gray, 15)
                 blur1 = cv2.GaussianBlur(blur1, (5, 5), 0)
