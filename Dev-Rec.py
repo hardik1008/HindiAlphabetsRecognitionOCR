@@ -56,18 +56,25 @@ def main():
                 blur1 = cv2.GaussianBlur(blur1, (5, 5), 0)
                 thresh1 = cv2.threshold(blur1, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)[1]
                 blackboard_cnts = cv2.findContours(thresh1.copy(), cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)[1]
+                print(blackboard_cnts)
                 if len(blackboard_cnts) >= 1:
-                    cnt = max(blackboard_cnts, key=cv2.contourArea)
-                    print(cv2.contourArea(cnt))
-                    if cv2.contourArea(cnt) > 2000:
-                        x, y, w, h = cv2.boundingRect(cnt)
-                        digit = blackboard_gray[y:y + h, x:x + w]
-                        # newImage = process_letter(digit)
-                        pred_probab, pred_class = keras_predict(model1, digit)
-                        print(pred_class, pred_probab)
+
+                    print("Reached line 62")
+                    try:
+                        cnt = max(blackboard_cnts, key=cv2.contourArea)
+                        print(cv2.contourArea(cnt))
+                        print("Reached line 65")
+                        if cv2.contourArea(cnt) > 2000:
+                            x, y, w, h = cv2.boundingRect(cnt)
+                            digit = blackboard_gray[y:y + h, x:x + w]
+                            # newImage = process_letter(digit)
+                            pred_probab, pred_class = keras_predict(model1, digit)
+                            print(pred_class, pred_probab)
+                    except Exception as ex:
+                        print(ex)
 
             pts = deque(maxlen=512)
-            blackboard = np.zeros((480, 640, 3), dtype=np.uint8)
+            blackboard = np.zeros((480, 640, 3), dtype=np.float)
         cv2.putText(img, "Conv Network :  " + str(letter_count[pred_class]), (10, 470),
                     cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
         cv2.imshow("Frame", img)
@@ -75,6 +82,8 @@ def main():
         k = cv2.waitKey(10)
         if k == 27:
             break
+    
+    keras_predict(model1, np.zeros((32, 32, 1), dtype=np.uint8))
     cap.release()
     cv2.destroyAllWindows()
 
@@ -95,6 +104,5 @@ def keras_process_image(img):
     return img
 
 
-keras_predict(model1, np.zeros((32, 32, 1), dtype=np.uint8))
 main()
 
